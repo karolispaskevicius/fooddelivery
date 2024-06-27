@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Number</title>
+    <script src="https://kit.fontawesome.com/115c94f159.js" crossorigin="anonymous"></script>
+    <div th:replace="fragments-header :: header"></div>
+</head>
+<body>
+<nav class="navbar">
+    <div class="user-info" th:each="authority : ${#authentication.principal.authorities}">
+        <span th:text="'Username: ' + ${#authentication.principal.username}"></span>
+        <br>
+        <span th:text="'Role: '"></span>
+        <span th:if="${authority.authority == 'USER'}">USER</span>
+        <span th:if="${authority.authority == 'ADMIN'}">ADMIN</span>
+    </div>
+    <div class="nav-left">
+        <form th:action="@{/calculator}" method="get">
+            <button class="nav-btn" type="submit">Order</button>
+        </form>
+        <form th:action="@{/numbers}" method="get">
+            <button class="nav-btn" type="submit">Restaurants</button>
+        </form>
+        <form th:action="@{/users}" method="get"
+              th:if="${#authentication.principal.authorities.?[authority == 'ADMIN'].size() > 0}">
+            <button class="nav-btn2" type="submit">Registered Users</button>
+        </form>
+    </div>
+    <div class="nav-right">
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-btn3" type="submit"><i class="fa-solid fa-person-walking-arrow-right"></i> Sign out
+            </button>
+        </form>
+    </div>
+</nav>
+<div class="container-info">
+    <div class="table-responsive">
+        <caption><b>Number information</b></caption>
+        <table class="table table-striped">
+            <tr th:if="${#authentication.principal.authorities.?[authority == 'ADMIN'].size() > 0}">
+                <td><b>Id:</b></td>
+                <td th:text="${number.id}"></td>
+            </tr>
+            <tr>
+                <td><b>pavadinimas:</b></td>
+                <td th:text="${number.pavadinimas}"></td>
+            </tr>
+            <tr>
+                <td><b>adresas:</b></td>
+                <td th:text="${number.adresas}"></td>
+            </tr>
+            <tr>
+                <td><b>pasto kodas:</b></td>
+                <td th:text="${number.pastokodas}"></td>
+            </tr>
+            <tr>
+                <td><b>maistas:</b></td>
+                <td th:text="${number.maistas}"></td>
+            </tr>
+        </table>
+    </div>
+</div>
+<div class="btn-container">
+    <button type="button" class="btn" onclick="history.back()">Back</button>
+</div>
+</body>
+</html>

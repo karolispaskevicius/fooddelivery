@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator</title>
+    <script src="https://kit.fontawesome.com/115c94f159.js" crossorigin="anonymous"></script>
+    <th:block th:replace="fragments-header :: header"></th:block>
+</head>
+<body>
+<nav class="navbar">
+    <div class="user-info" th:each="authority : ${#authentication.principal.authorities}">
+        <span th:text="'Username: ' + ${#authentication.principal.username}"></span>
+        <br>
+        <span th:text="'Role: '"></span>
+        <span th:if="${authority.authority == 'USER'}">USER</span>
+        <span th:if="${authority.authority == 'ADMIN'}">ADMIN</span>
+    </div>
+    <div class="nav-left">
+        <form th:action="@{/calculator}" method="get">
+            <button class="nav-btn" type="submit">Order</button>
+        </form>
+        <form th:action="@{/numbers}" method="get">
+            <button class="nav-btn" type="submit">Restaurants</button>
+        </form>
+        <form th:action="@{/users}" method="get"
+              th:if="${#authentication.principal.authorities.?[authority == 'ADMIN'].size() > 0}">
+            <button class="nav-btn2" type="submit">Registered Users</button>
+        </form>
+    </div>
+    <div class="nav-right">
+        <form th:action="@{/logout}" method="post">
+            <button class="nav-btn3" type="submit"><i class="fa-solid fa-person-walking-arrow-right"></i> Sign out
+            </button>
+        </form>
+    </div>
+</nav>
+<div class="container">
+    <h2>Prideti istaiga</h2>
+    <form method="post" th:action="@{/calculate}" th:object="${number}" autocomplete="off">
+        <div class="input-field">
+            <label> Maitinimo įstaigos pavadinimas:
+                <input type="pavadinimas" name="pavadinimas" required>
+            </label>
+        </div>
+        <div class="input-field">
+            <label> Pašto kodas:
+                <input type="pastokodas" name="pastokodas" max="9999" required>
+            </label>
+        </div>
+        <div class="input-field">
+            <label> Adresas:
+                <input type="text" name="adresas" required>
+            </label>
+        </div>
+        <div class="input-field">
+            <label> Maistas:
+                <input type="text" name="maistas" required>
+            </label>
+        </div>
+        <button type="submit">Pateikti</button>
+    </form>
+</div>
+</body>
+<script>
+    $(function () {
+        $("#number1, #number2").change(function() {
+            var max = parseInt($(this).attr('max'));
+            if ($(this).val() > max) {
+                $(this).val(max);
+            }
+        });
+    });
+</script>
+</html>
